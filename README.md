@@ -1,3 +1,5 @@
+>tip This project does not currently have English documentation.
+
 # 政府官网系统 v1.0
 
 专业级政府官网解决方案，基于 PHP8.1 + MySQL8.0 开发，支持前后台全功能，采用类似 WordPress 的部署方式。
