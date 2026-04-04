@@ -1,4 +1,4 @@
->[tip] This project does not currently have English documentation.
+This project does not currently have English documentation.
 
 # 政府官网系统 v1.0
 
