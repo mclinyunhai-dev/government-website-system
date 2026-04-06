@@ -46,7 +46,7 @@ class User extends Controller {
             $userModel = new UserModel();
             $userModel->insert($data);
             
-            return $this->success('添加成功', null, '/admin/user');
+            $this->successRedirect('添加成功', '/admin/user');
         }
         
         $this->fetch('user/add');
@@ -74,7 +74,7 @@ class User extends Controller {
             
             $userModel->where('id', $id)->update($data);
             
-            return $this->success('更新成功', null, '/admin/user');
+            $this->successRedirect('更新成功', '/admin/user');
         }
         
         $info = $userModel->where('id', $id)->find();
@@ -90,6 +90,6 @@ class User extends Controller {
         $userModel = new UserModel();
         $userModel->where('id', $id)->delete();
         
-        return $this->success('删除成功');
+        $this->successRedirect('删除成功', '/admin/user');
     }
 }

@@ -32,16 +32,10 @@ class Login extends Controller {
         
         $username = $this->post('username');
         $password = $this->post('password');
-        $captcha = $this->post('captcha');
         
         // 验证参数
         if (empty($username) || empty($password)) {
             return $this->error('用户名和密码不能为空');
-        }
-        
-        // 验证码验证
-        if (empty($captcha) || strtolower($captcha) !== strtolower($_SESSION['captcha'] ?? '')) {
-            return $this->error('验证码错误');
         }
         
         // 查询用户
@@ -86,10 +80,7 @@ class Login extends Controller {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['username'];
         
-        // 清除验证码
-        unset($_SESSION['captcha']);
-        
-        return $this->success('登录成功', null, '/user/profile');
+        $this->successRedirect('登录成功', '/user/profile');
     }
     
     /**
@@ -114,12 +105,17 @@ class Login extends Controller {
         $username = $this->post('username');
         $password = $this->post('password');
         $confirmPassword = $this->post('confirm_password');
+        $realName = $this->post('real_name');
+        $phone = $this->post('phone');
         $email = $this->post('email');
-        $captcha = $this->post('captcha');
         
         // 验证
-        if (empty($username) || empty($password) || empty($email)) {
-            return $this->error('请填写必填项');
+        if (empty($username) || empty($password)) {
+            return $this->error('用户名和密码不能为空');
+        }
+        
+        if (strlen($username) < 3 || strlen($username) > 20) {
+            return $this->error('用户名长度为3-20个字符');
         }
         
         if ($password !== $confirmPassword) {
@@ -130,13 +126,8 @@ class Login extends Controller {
             return $this->error('密码长度至少6位');
         }
         
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return $this->error('邮箱格式不正确');
-        }
-        
-        // 验证码验证
-        if (empty($captcha) || strtolower($captcha) !== strtolower($_SESSION['captcha'] ?? '')) {
-            return $this->error('验证码错误');
         }
         
         $userModel = new User();
@@ -155,18 +146,18 @@ class Login extends Controller {
         $userId = $userModel->insert([
             'username' => $username,
             'password' => password_hash($password, PASSWORD_BCRYPT),
+            'real_name' => $realName,
+            'phone' => $phone,
             'email' => $email,
             'status' => 1,
             'create_time' => date('Y-m-d H:i:s')
         ]);
         
         if ($userId) {
-            // 清除验证码
-            unset($_SESSION['captcha']);
-            return $this->success('注册成功，请登录', null, '/login');
+            $this->successRedirect('注册成功，请登录', '/login');
         }
         
-        return $this->error('注册失败，请重试');
+        $this->errorRedirect('注册失败，请重试');
     }
     
     /**

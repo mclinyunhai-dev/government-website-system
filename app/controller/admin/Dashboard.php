@@ -2,11 +2,11 @@
 namespace app\controller\admin;
 
 use core\Controller;
-use app\model\Notice;
-use app\model\Policy;
-use app\model\Judicial;
-use app\model\User;
-use app\model\Consult;
+use app\model\Notice as NoticeModel;
+use app\model\Policy as PolicyModel;
+use app\model\Judicial as JudicialModel;
+use app\model\User as UserModel;
+use app\model\Consult as ConsultModel;
 
 /**
  * 后台仪表盘控制器
@@ -19,18 +19,18 @@ class Dashboard extends Controller {
     public function index() {
         // 统计数据
         $stats = [
-            'notice_count' => (new Notice())->count(),
-            'policy_count' => (new Policy())->count(),
-            'judicial_count' => (new Judicial())->count(),
-            'user_count' => (new User())->count(),
-            'consult_pending' => (new Consult())->where('status', 0)->count()
+            'notice_count' => (new NoticeModel())->count(),
+            'policy_count' => (new PolicyModel())->count(),
+            'judicial_count' => (new JudicialModel())->count(),
+            'user_count' => (new UserModel())->count(),
+            'consult_pending' => (new ConsultModel())->where('status', 0)->count()
         ];
         
         // 最新公告
-        $latestNotices = (new Notice())->getLatest(5);
+        $latestNotices = (new NoticeModel())->getLatest(5);
         
         // 待处理咨询
-        $pendingConsults = (new Consult())->where('status', 0)->order('create_time', 'DESC')->limit(5)->select();
+        $pendingConsults = (new ConsultModel())->where('status', 0)->order('create_time', 'DESC')->limit(5)->select();
         
         $this->assign([
             'stats' => $stats,

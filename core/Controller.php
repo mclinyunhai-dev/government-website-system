@@ -31,6 +31,12 @@ abstract class Controller {
     protected function fetch($template = '', $data = []) {
         $this->viewData = array_merge($this->viewData, $data);
         
+        // 前台模块自动加载 siteConfig
+        if ($this->getModule() === 'home' && !isset($this->viewData['siteConfig'])) {
+            $settingsModel = new \app\model\Settings();
+            $this->viewData['siteConfig'] = $settingsModel->getAllSettings();
+        }
+        
         if (empty($template)) {
             $template = $this->getDefaultTemplate();
         }
@@ -43,6 +49,13 @@ abstract class Controller {
         
         extract($this->viewData);
         include $viewPath;
+    }
+    
+    /**
+     * 渲染视图（别名）
+     */
+    protected function display($template = '', $data = []) {
+        return $this->fetch($template, $data);
     }
     
     /**
@@ -120,6 +133,39 @@ abstract class Controller {
     }
     
     /**
+     * 表单提交成功 - 跳转并显示消息
+     */
+    protected function successRedirect($message, $url) {
+        $_SESSION['flash_message'] = ['type' => 'success', 'message' => $message];
+        $this->redirect($url);
+    }
+    
+    /**
+     * 表单提交错误 - 跳转并显示消息
+     */
+    protected function errorRedirect($message, $url = null) {
+        $_SESSION['flash_message'] = ['type' => 'error', 'message' => $message];
+        if ($url) {
+            $this->redirect($url);
+        }
+        // 默认返回上一页
+        $referer = $_SERVER['HTTP_REFERER'] ?? '/';
+        $this->redirect($referer);
+    }
+    
+    /**
+     * 获取并清除闪存消息
+     */
+    protected function getFlashMessage() {
+        if (isset($_SESSION['flash_message'])) {
+            $message = $_SESSION['flash_message'];
+            unset($_SESSION['flash_message']);
+            return $message;
+        }
+        return null;
+    }
+    
+    /**
      * 重定向
      */
     protected function redirect($url, $code = 302) {
@@ -179,5 +225,40 @@ abstract class Controller {
     protected function isAjax() {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+    
+    /**
+     * 获取数据库查询构建器
+     */
+    protected function db() {
+        $pdo = $this->app->getDb();
+        $prefix = $this->app->getConfig('database.prefix', 'gov_');
+        return new Db($pdo, $prefix);
+    }
+    
+    /**
+     * 获取配置
+     */
+    protected function getConfig($name = null) {
+        return $this->app->getConfig($name);
+    }
+    
+    /**
+     * 记录日志
+     */
+    protected function log($type, $content, $data = []) {
+        $adminId = $_SESSION['admin_id'] ?? 0;
+        $adminName = $_SESSION['admin']['username'] ?? 'system';
+        
+        $this->db()->table('operation_log')->insert([
+            'admin_id' => $adminId,
+            'admin_name' => $adminName,
+            'type' => $type,
+            'content' => $content,
+            'data' => json_encode($data),
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
     }
 }

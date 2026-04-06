@@ -2,7 +2,7 @@
 namespace app\controller\admin;
 
 use core\Controller;
-use app\model\Notice;
+use app\model\Notice as NoticeModel;
 
 /**
  * 公告管理控制器
@@ -16,7 +16,7 @@ class Notice extends Controller {
         $page = $this->get('page', 1);
         $limit = 15;
         
-        $noticeModel = new Notice();
+        $noticeModel = new NoticeModel();
         $list = $noticeModel->order('id', 'DESC')->page($page, $limit)->select();
         $total = $noticeModel->count();
         
@@ -44,10 +44,10 @@ class Notice extends Controller {
                 'update_time' => date('Y-m-d H:i:s')
             ];
             
-            $noticeModel = new Notice();
+            $noticeModel = new NoticeModel();
             $noticeModel->insert($data);
             
-            return $this->success('添加成功', null, '/admin/notice');
+            $this->successRedirect('添加成功', '/admin/notice');
         }
         
         $this->fetch('notice/add');
@@ -58,7 +58,7 @@ class Notice extends Controller {
      */
     public function edit() {
         $id = $this->get('id');
-        $noticeModel = new Notice();
+        $noticeModel = new NoticeModel();
         
         if ($this->isMethod('POST')) {
             $data = [
@@ -73,7 +73,7 @@ class Notice extends Controller {
             
             $noticeModel->where('id', $id)->update($data);
             
-            return $this->success('更新成功', null, '/admin/notice');
+            $this->successRedirect('更新成功', '/admin/notice');
         }
         
         $info = $noticeModel->where('id', $id)->find();
@@ -86,9 +86,9 @@ class Notice extends Controller {
      */
     public function delete() {
         $id = $this->post('id');
-        $noticeModel = new Notice();
+        $noticeModel = new NoticeModel();
         $noticeModel->where('id', $id)->delete();
         
-        return $this->success('删除成功');
+        $this->successRedirect('删除成功', '/admin/notice');
     }
 }

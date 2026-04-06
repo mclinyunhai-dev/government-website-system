@@ -65,6 +65,6 @@ class Service extends Controller {
             'create_time' => date('Y-m-d H:i:s')
         ]);
         
-        return $this->success('提交成功，我们会尽快回复您', null, '/service');
+        $this->successRedirect('提交成功，我们会尽快回复您', '/service');
     }
 }

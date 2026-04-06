@@ -2,7 +2,7 @@
 namespace app\controller\home;
 
 use core\Controller;
-use app\model\Notice;
+use app\model\Notice as NoticeModel;
 
 /**
  * 公告控制器
@@ -16,7 +16,7 @@ class Notice extends Controller {
         $page = $this->get('page', 1);
         $limit = 10;
         
-        $noticeModel = new Notice();
+        $noticeModel = new NoticeModel();
         $notices = $noticeModel->getList($page, $limit);
         $total = $noticeModel->getTotal();
         
@@ -39,7 +39,7 @@ class Notice extends Controller {
             return;
         }
         
-        $noticeModel = new Notice();
+        $noticeModel = new NoticeModel();
         $notice = $noticeModel->findById($id);
         
         if (!$notice || $notice['status'] != 1) {

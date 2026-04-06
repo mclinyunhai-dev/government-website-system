@@ -61,13 +61,13 @@ class Consult extends Controller {
         
         $consultModel = new ConsultModel();
         $consultModel->where('id', $id)->update([
-            'reply' => $reply,
+            'reply_content' => $reply,
             'reply_time' => date('Y-m-d H:i:s'),
             'status' => 2,
             'update_time' => date('Y-m-d H:i:s')
         ]);
         
-        return $this->success('回复成功');
+        $this->successRedirect('回复成功', '/admin/consult');
     }
     
     /**
@@ -78,6 +78,6 @@ class Consult extends Controller {
         $consultModel = new ConsultModel();
         $consultModel->where('id', $id)->delete();
         
-        return $this->success('删除成功');
+        $this->successRedirect('删除成功', '/admin/consult');
     }
 }

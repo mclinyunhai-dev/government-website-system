@@ -1,46 +1,52 @@
 <?php include APP_PATH . 'view/home/public/header.php'; ?>
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">用户登录</h4>
-                </div>
-                <div class="card-body p-4">
-                    <form action="/login/doLogin" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">用户名</label>
-                            <input type="text" name="username" class="form-control" required>
+<!-- 登录页面 -->
+<section class="auth-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="auth-card">
+                    <div class="auth-header text-center">
+                        <div class="auth-icon">
+                            <i class="fas fa-user-circle"></i>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">密码</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">验证码</label>
-                            <div class="input-group">
-                                <input type="text" name="captcha" class="form-control" required>
-                                <img src="/login/captcha" alt="验证码" class="captcha-img" style="cursor: pointer; height: 38px;" onclick="this.src='/login/captcha?'+Math.random()">
+                        <h3 class="auth-title">欢迎回来</h3>
+                        <p class="auth-subtitle">登录您的账户以继续</p>
+                    </div>
+                    
+                    <div class="auth-body">
+                        <form action="/login/doLogin" method="POST" class="auth-form">
+                            <div class="form-floating mb-3">
+                                <input type="text" name="username" class="form-control" id="username" placeholder="用户名" required>
+                                <label for="username"><i class="fas fa-user me-2 text-muted"></i>用户名</label>
                             </div>
+                            
+                            <div class="form-floating mb-4">
+                                <input type="password" name="password" class="form-control" id="password" placeholder="密码" required>
+                                <label for="password"><i class="fas fa-lock me-2 text-muted"></i>密码</label>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-auth btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>立即登录
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="auth-divider">
+                            <span>还没有账号？</span>
                         </div>
                         
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">登录</button>
+                        <div class="text-center">
+                            <a href="/login/register" class="btn btn-outline-auth">
+                                <i class="fas fa-user-plus me-2"></i>创建新账户
+                            </a>
                         </div>
-                    </form>
-                    
-                    <hr class="my-4">
-                    
-                    <div class="text-center">
-                        <p class="mb-0">还没有账号？ <a href="/login/register">立即注册</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <?php include APP_PATH . 'view/home/public/footer.php'; ?>

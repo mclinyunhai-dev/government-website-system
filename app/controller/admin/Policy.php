@@ -2,7 +2,7 @@
 namespace app\controller\admin;
 
 use core\Controller;
-use app\model\Policy;
+use app\model\Policy as PolicyModel;
 
 /**
  * 政策法规管理控制器
@@ -16,7 +16,7 @@ class Policy extends Controller {
         $page = $this->get('page', 1);
         $limit = 15;
         
-        $policyModel = new Policy();
+        $policyModel = new PolicyModel();
         $list = $policyModel->order('id', 'DESC')->page($page, $limit)->select();
         $total = $policyModel->count();
         
@@ -34,7 +34,7 @@ class Policy extends Controller {
         if ($this->isMethod('POST')) {
             $data = [
                 'title' => $this->post('title'),
-                'department' => $this->post('department'),
+                'publish_org' => $this->post('publish_org'),
                 'content' => $this->post('content'),
                 'category_id' => $this->post('category_id', 0),
                 'status' => $this->post('status', 1),
@@ -43,10 +43,10 @@ class Policy extends Controller {
                 'update_time' => date('Y-m-d H:i:s')
             ];
             
-            $policyModel = new Policy();
+            $policyModel = new PolicyModel();
             $policyModel->insert($data);
             
-            return $this->success('添加成功', null, '/admin/policy');
+            $this->successRedirect('添加成功', '/admin/policy');
         }
         
         $this->fetch('policy/add');
@@ -57,12 +57,12 @@ class Policy extends Controller {
      */
     public function edit() {
         $id = $this->get('id');
-        $policyModel = new Policy();
+        $policyModel = new PolicyModel();
         
         if ($this->isMethod('POST')) {
             $data = [
                 'title' => $this->post('title'),
-                'department' => $this->post('department'),
+                'publish_org' => $this->post('publish_org'),
                 'content' => $this->post('content'),
                 'category_id' => $this->post('category_id', 0),
                 'status' => $this->post('status', 1),
@@ -72,7 +72,7 @@ class Policy extends Controller {
             
             $policyModel->where('id', $id)->update($data);
             
-            return $this->success('更新成功', null, '/admin/policy');
+            $this->successRedirect('更新成功', '/admin/policy');
         }
         
         $info = $policyModel->where('id', $id)->find();
@@ -85,9 +85,9 @@ class Policy extends Controller {
      */
     public function delete() {
         $id = $this->post('id');
-        $policyModel = new Policy();
+        $policyModel = new PolicyModel();
         $policyModel->where('id', $id)->delete();
         
-        return $this->success('删除成功');
+        $this->successRedirect('删除成功', '/admin/policy');
     }
 }

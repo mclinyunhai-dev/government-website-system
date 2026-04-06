@@ -92,7 +92,7 @@ class Login extends Controller {
         // 记录登录日志
         $this->recordLoginLog($admin['id'], $admin['username'], true);
         
-        return $this->success('登录成功', null, '/admin');
+        $this->successRedirect('登录成功', '/admin');
     }
     
     /**

@@ -3,7 +3,15 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <h1 class="mb-4">政策法规</h1>
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">首页</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">政策法规</li>
+                </ol>
+            </nav>
+            <h1 class="page-title mb-4">
+                <i class="fas fa-file-alt me-2"></i>政策法规
+            </h1>
             
             <?php if (!empty($policies)): ?>
                 <div class="list-group">
@@ -14,7 +22,7 @@
                                 <small class="text-muted"><?php echo date('Y-m-d', strtotime($policy['publish_date'])); ?></small>
                             </div>
                             <p class="mb-1 text-muted">
-                                <small><i class="fas fa-building me-1"></i><?php echo htmlspecialchars($policy['department'] ?? ''); ?></small>
+                                <small><i class="fas fa-building me-1"></i><?php echo htmlspecialchars($policy['publish_org'] ?? ''); ?></small>
                             </p>
                         </a>
                     <?php endforeach; ?>

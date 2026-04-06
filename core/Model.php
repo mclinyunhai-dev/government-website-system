@@ -88,7 +88,9 @@ abstract class Model {
     protected function getWhereParams() {
         $params = [];
         foreach ($this->where as $w) {
-            $params[] = $w[2];
+            // 两参数情况: [field, value]，value在索引1
+            // 三参数情况: [field, operator, value]，value在索引2
+            $params[] = $w[2] ?? $w[1];
         }
         return $params;
     }
@@ -200,6 +202,18 @@ abstract class Model {
             'page_size' => $pageSize,
             'total_page' => ceil($total / $pageSize)
         ];
+    }
+    
+    /**
+     * 设置分页（链式调用）
+     */
+    public function page($page = 1, $pageSize = 15) {
+        $page = max(1, intval($page));
+        $pageSize = max(1, intval($pageSize));
+        $offset = ($page - 1) * $pageSize;
+        
+        $this->limit($offset, $pageSize);
+        return $this;
     }
     
     /**

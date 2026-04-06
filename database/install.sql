@@ -134,7 +134,11 @@ INSERT INTO `gov_settings` (`setting_key`, `setting_value`, `setting_group`, `se
 ('smtp_password', '', 'smtp', 'SMTP密码'),
 ('smtp_encryption', 'ssl', 'smtp', 'SMTP加密方式'),
 ('smtp_from', '', 'smtp', '发件人邮箱'),
-('smtp_from_name', '', 'smtp', '发件人名称');
+('smtp_from_name', '', 'smtp', '发件人名称'),
+('contact_phone', '12345 政务服务热线', 'contact', '联系电话'),
+('contact_email', 'contact@gov.cn', 'contact', '联系邮箱'),
+('contact_address', '某某市政府大楼', 'contact', '联系地址'),
+('contact_work_time', '周一至周五 9:00-17:00', 'contact', '工作时间');
 
 -- ----------------------------
 -- 前端文字配置表
@@ -346,6 +350,7 @@ CREATE TABLE `gov_judicial` (
 DROP TABLE IF EXISTS `gov_consult`;
 CREATE TABLE `gov_consult` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) unsigned DEFAULT '0' COMMENT '用户ID 0表示游客',
     `type` tinyint(1) unsigned DEFAULT '1' COMMENT '类型 1咨询 2投诉 3建议',
     `title` varchar(255) NOT NULL COMMENT '标题',
     `content` text COMMENT '内容',

@@ -17,7 +17,7 @@ class User extends Controller {
         parent::__construct($app);
         
         // 需要登录的方法
-        $needAuth = ['profile', 'media', 'password', 'logout'];
+        $needAuth = ['profile', 'password', 'logout'];
         $action = $_GET['action'] ?? 'profile';
         
         if (in_array($action, $needAuth) && !isset($_SESSION['user_id'])) {
@@ -35,38 +35,6 @@ class User extends Controller {
         
         $this->assign('user', $user);
         $this->fetch('user/profile');
-    }
-    
-    /**
-     * 我的媒体
-     */
-    public function media() {
-        $page = $this->get('page', 1);
-        $limit = 12;
-        
-        // 获取用户上传的媒体文件
-        $db = $this->app->getDb();
-        $prefix = $this->app->getConfig('database.prefix', 'gov_');
-        
-        $offset = ($page - 1) * $limit;
-        $sql = "SELECT * FROM {$prefix}media WHERE user_id = ? ORDER BY create_time DESC LIMIT {$offset}, {$limit}";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$_SESSION['user_id']]);
-        $media = $stmt->fetchAll();
-        
-        // 获取总数
-        $countSql = "SELECT COUNT(*) FROM {$prefix}media WHERE user_id = ?";
-        $countStmt = $db->prepare($countSql);
-        $countStmt->execute([$_SESSION['user_id']]);
-        $total = $countStmt->fetchColumn();
-        
-        $this->assign('media', $media);
-        $this->assign('page', $page);
-        $this->assign('limit', $limit);
-        $this->assign('total', $total);
-        $this->assign('totalPages', ceil($total / $limit));
-        
-        $this->fetch('user/media');
     }
     
     /**
@@ -106,6 +74,6 @@ class User extends Controller {
             'password' => password_hash($newPassword, PASSWORD_BCRYPT)
         ]);
         
-        return $this->success('密码修改成功', null, '/user/profile');
+        $this->successRedirect('密码修改成功', '/user/profile');
     }
 }

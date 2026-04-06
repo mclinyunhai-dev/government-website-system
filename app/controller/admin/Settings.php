@@ -29,14 +29,15 @@ class Settings extends Controller {
                 'copyright' => $this->post('copyright'),
                 'contact_address' => $this->post('contact_address'),
                 'contact_phone' => $this->post('contact_phone'),
-                'contact_email' => $this->post('contact_email')
+                'contact_email' => $this->post('contact_email'),
+                'contact_work_time' => $this->post('contact_work_time')
             ];
             
             foreach ($settings as $key => $value) {
                 $settingsModel->set($key, $value);
             }
             
-            return $this->success('保存成功');
+            $this->successRedirect('保存成功', '/admin/settings');
         }
         
         // 获取所有设置

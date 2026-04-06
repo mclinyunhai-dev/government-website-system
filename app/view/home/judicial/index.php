@@ -3,7 +3,15 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <h1 class="mb-4">裁判文书检索</h1>
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">首页</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">裁判文书</li>
+                </ol>
+            </nav>
+            <h1 class="page-title mb-4">
+                <i class="fas fa-gavel me-2"></i>裁判文书检索
+            </h1>
             
             <!-- 搜索框 -->
             <div class="card mb-4">

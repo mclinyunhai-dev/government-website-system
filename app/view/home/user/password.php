@@ -9,7 +9,6 @@
                 </div>
                 <div class="list-group list-group-flush">
                     <a href="/user/profile" class="list-group-item list-group-item-action">基本信息</a>
-                    <a href="/user/media" class="list-group-item list-group-item-action">我的媒体</a>
                     <a href="/user/password" class="list-group-item list-group-item-action active">修改密码</a>
                     <a href="/logout" class="list-group-item list-group-item-action text-danger">退出登录</a>
                 </div>

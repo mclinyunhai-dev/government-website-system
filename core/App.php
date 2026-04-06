@@ -249,9 +249,17 @@ class App {
         $allowedWithoutLogin = ['admin/login', 'admin/login/index', 'admin/login/doLogin', 'admin/login/captcha', 'admin/login/logout'];
         
         // 检查登录状态
-        if (!$this->checkAdminLogin() && !in_array($uri, $allowedWithoutLogin)) {
-            header('Location: /admin/login');
-            exit;
+        if (!in_array($uri, $allowedWithoutLogin)) {
+            if (!$this->checkAdminLogin()) {
+                // 检查是否是普通用户登录（有user_id但没有admin权限）
+                if (isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0) {
+                    // 普通用户尝试访问后台，显示403
+                    $this->show403Error();
+                }
+                // 未登录，跳转到登录页
+                header('Location: /admin/login');
+                exit;
+            }
         }
         
         $parts = explode('/', trim($uri, '/'));
@@ -309,7 +317,37 @@ class App {
      * 检查后台登录状态
      */
     private function checkAdminLogin() {
-        return isset($_SESSION['admin_id']) && $_SESSION['admin_id'] > 0;
+        // 检查是否有admin_id且admin session存在
+        if (!isset($_SESSION['admin_id']) || $_SESSION['admin_id'] <= 0) {
+            return false;
+        }
+        
+        // 检查是否是真正的管理员（有admin session且is_super或role_id存在）
+        if (!isset($_SESSION['admin']) || !is_array($_SESSION['admin'])) {
+            return false;
+        }
+        
+        // 验证session中的admin_id与admin.id是否匹配
+        if ($_SESSION['admin_id'] !== $_SESSION['admin']['id']) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 显示403错误页面
+     */
+    private function show403Error() {
+        http_response_code(403);
+        $errorView = APP_PATH . 'view/home/error/403.php';
+        if (file_exists($errorView)) {
+            include $errorView;
+        } else {
+            echo '<h1>403 Forbidden</h1>';
+            echo '<p>您没有权限访问此页面。</p>';
+        }
+        exit;
     }
     
     /**

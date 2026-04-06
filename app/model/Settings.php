@@ -13,6 +13,13 @@ class Settings extends Model {
     /**
      * 获取所有设置
      */
+    public function getAll() {
+        return $this->getAllSettings();
+    }
+    
+    /**
+     * 获取所有设置
+     */
     public function getAllSettings() {
         $cacheKey = 'settings_all';
         
@@ -43,9 +50,23 @@ class Settings extends Model {
     /**
      * 获取单个设置
      */
+    public function get($key, $default = null) {
+        return $this->getSetting($key, $default);
+    }
+    
+    /**
+     * 获取单个设置
+     */
     public function getSetting($key, $default = null) {
         $settings = $this->getAllSettings();
         return $settings[$key] ?? $default;
+    }
+    
+    /**
+     * 保存设置
+     */
+    public function set($key, $value) {
+        return $this->saveSetting($key, $value);
     }
     
     /**

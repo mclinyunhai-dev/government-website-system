@@ -37,7 +37,7 @@ class Policy extends Model {
     public function search($keyword, $page = 1, $pageSize = 15) {
         $sql = "SELECT * FROM {$this->getTable()} 
                 WHERE status = 1 
-                AND (title LIKE ? OR content LIKE ? OR department LIKE ?)
+                AND (title LIKE ? OR content LIKE ? OR publish_org LIKE ?)
                 ORDER BY publish_date DESC LIMIT ?, ?";
         
         $likeKeyword = "%{$keyword}%";
@@ -49,7 +49,7 @@ class Policy extends Model {
         // 获取总数
         $countSql = "SELECT COUNT(*) FROM {$this->getTable()} 
                      WHERE status = 1 
-                     AND (title LIKE ? OR content LIKE ? OR department LIKE ?)";
+                     AND (title LIKE ? OR content LIKE ? OR publish_org LIKE ?)";
         $countStmt = $this->db->prepare($countSql);
         $countStmt->execute([$likeKeyword, $likeKeyword, $likeKeyword]);
         $total = $countStmt->fetchColumn();

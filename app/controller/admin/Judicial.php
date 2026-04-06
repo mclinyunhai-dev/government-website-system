@@ -47,7 +47,7 @@ class Judicial extends Controller {
             $judicialModel = new JudicialModel();
             $judicialModel->insert($data);
             
-            return $this->success('添加成功', null, '/admin/judicial');
+            $this->successRedirect('添加成功', '/admin/judicial');
         }
         
         $this->fetch('judicial/add');
@@ -74,7 +74,7 @@ class Judicial extends Controller {
             
             $judicialModel->where('id', $id)->update($data);
             
-            return $this->success('更新成功', null, '/admin/judicial');
+            $this->successRedirect('更新成功', '/admin/judicial');
         }
         
         $info = $judicialModel->where('id', $id)->find();
@@ -90,6 +90,6 @@ class Judicial extends Controller {
         $judicialModel = new JudicialModel();
         $judicialModel->where('id', $id)->delete();
         
-        return $this->success('删除成功');
+        $this->successRedirect('删除成功', '/admin/judicial');
     }
 }
